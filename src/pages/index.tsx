@@ -1,25 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+// import { signIn, signOut, useSession } from "next-auth/react";
 
-import { api } from "../utils/api";
-import { useState } from "react";
+// import { api } from "../utils/api";
+// import { useState } from "react";
 
 const Home: NextPage = () => {
-  const createBuildMutation = api.builds.createBuild.useMutation();
-
-  const [buildOrder, setBuildOrder] = useState("");
-  const [matchUp, setMatchUp] = useState("zvt");
-
-  const handleSubmitBuildOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await createBuildMutation.mutateAsync({
-      matchUp,
-      buildOrder,
-    });
-  };
-
   return (
     <>
       <Head>

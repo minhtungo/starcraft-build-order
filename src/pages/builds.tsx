@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-const Home: NextPage = () => {
+const Builds: NextPage = () => {
   const builds = api.builds.getBuilds.useQuery();
 
   return (
@@ -42,4 +42,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Builds;
