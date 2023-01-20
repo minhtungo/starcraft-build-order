@@ -4,7 +4,16 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const buildsRouter = createTRPCRouter({
   createBuild: publicProcedure
-    .input(z.object({ matchUp: z.string(), buildOrder: z.string() }))
+    .input(
+      z.object({
+        matchUp: z.string(),
+        buildOrder: z.string(),
+        style: z.string(),
+        author: z.string().nullish(),
+        description: z.string().nullish(),
+        title: z.string(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       const build = await ctx.prisma.buildOrder.create({
         data: {
