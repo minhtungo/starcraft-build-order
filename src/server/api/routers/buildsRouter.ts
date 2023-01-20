@@ -18,4 +18,13 @@ export const buildsRouter = createTRPCRouter({
   getBuilds: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.buildOrder.findMany();
   }),
+  getBuildsByMatchUp: publicProcedure
+    .input(z.object({ matchUp: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.buildOrder.findMany({
+        where: {
+          matchUp: input.matchUp,
+        },
+      });
+    }),
 });
