@@ -3,12 +3,8 @@ import Link from "next/link";
 import React from "react";
 import Badge from "./Badge";
 
-interface Variant {
-  [key: string]: "red" | "green" | "yellow" | "blue";
-}
-
 const BuildCard = ({ build }: { build: BuildOrder }) => {
-  const badgeVariant: Variant = {
+  const badgeVariant =  {
     cheese: "yellow",
     macro: "green",
     "all-in": "red",
