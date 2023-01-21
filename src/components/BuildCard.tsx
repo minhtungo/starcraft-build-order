@@ -23,7 +23,7 @@ const BuildCard = ({ build }: { build: BuildOrder }) => {
       </p>
       <p className="mb-3 flex gap-4 font-normal text-gray-700 dark:text-gray-400">
         Style
-        <Badge text={build.style} variant={badgeVariant} />
+        <Badge text={build.style} variant={badgeVariant!} />
       </p>
       <p className="mb-3 flex gap-4 font-normal text-gray-700 dark:text-gray-400">
         Created by {build.author}
