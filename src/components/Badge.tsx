@@ -9,7 +9,7 @@ interface Variant {
   [key: string]: string;
 }
 
-const Badge = ({ variant, text }: { variant: VariantProps; text: string }) => {
+const Badge = ({ variant, text }: { variant: string; text: string }) => {
   const styles: Variant = {
     red: "text-red-800 bg-red-100",
     green: "text-green-800 bg-green-100",
