@@ -6,6 +6,35 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { buildTypes } from "./races/[raceName]/match-ups/[opponentRace]";
 
+type TStep = {
+  name: string;
+  supply: number;
+};
+
+type races = "z" | "p" | "t";
+
+const units: Record<races, TStep[]> = {
+  z: [
+    {
+      name: "drone",
+      supply: 1,
+    },
+  ],
+  p: [],
+  t: [],
+};
+
+const structures: Record<races, TStep[]> = {
+  z: [
+    {
+      name: "spawing pool",
+      supply: -1,
+    },
+  ],
+  p: [],
+  t: [],
+};
+
 const SubmitBuildPage: NextPage = () => {
   const createBuildMutation = api.builds.createBuild.useMutation();
 
@@ -15,6 +44,7 @@ const SubmitBuildPage: NextPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [matchUp, setMatchUp] = useState("zvt");
+  const [supply, setSupply] = useState(12)
 
   const router = useRouter();
 
@@ -31,9 +61,16 @@ const SubmitBuildPage: NextPage = () => {
       });
     } catch (error) {
       console.log(error);
-    }
+    }s
     router.push("/");
   };
+
+  const addStepToBuildOrder = (stepName: TStep) => {
+    setBuildOrder(`${buildOrder}\n${supply} ${stepName.name}`);
+    setSupply(supply + stepName.supply)
+  };
+
+  const race = matchUp.split("v")[0];
 
   return (
     <>
@@ -67,6 +104,12 @@ const SubmitBuildPage: NextPage = () => {
                 <option value="zvt">ZvT</option>
                 <option value="zvp">ZvP</option>
                 <option value="zvz">ZvZ</option>
+                <option value="pvt">PvT</option>
+                <option value="pvp">PvP</option>
+                <option value="pvz">PvZ</option>
+                <option value="tvt">TvT</option>
+                <option value="tvp">TvP</option>
+                <option value="tvz">TvZ</option>
               </select>
             </div>
             <div className="">
@@ -125,21 +168,6 @@ const SubmitBuildPage: NextPage = () => {
           <div>
             <label
               className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-              htmlFor="build"
-            >
-              Build Order
-            </label>
-            <textarea
-              className="input h-[6rem]"
-              id="build"
-              value={buildOrder}
-              onChange={(e) => setBuildOrder(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
               htmlFor="description"
             >
               Description
@@ -151,7 +179,51 @@ const SubmitBuildPage: NextPage = () => {
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
-          <div></div>
+          <div className="flex w-full gap-4">
+            <div>
+              <label
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                htmlFor="build"
+              >
+                Build Order
+              </label>
+              <textarea
+                className="input h-[6rem]"
+                id="build"
+                value={buildOrder}
+                onChange={(e) => setBuildOrder(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-4">
+              <div className="flex flex-col gap-4">
+                <h2 className="text-lg">Units</h2>
+                {units[race as races]?.map((unit: TStep) => (
+                  <button
+                    key={unit.name}
+                    type="button"
+                    onClick={() => addStepToBuildOrder(unit)}
+                    className=""
+                  >
+                    {unit.name}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-col gap-4">
+                <h2 className="text-lg">Units</h2>
+                {structures[race as races]?.map((structure: TStep) => (
+                  <button
+                    key={structure.name}
+                    type="button"
+                    onClick={() => addStepToBuildOrder(structure)}
+                    className=""
+                  >
+                    {structure.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <button className="btn" type="submit">
             Submit
           </button>

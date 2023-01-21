@@ -26,6 +26,12 @@ const FindBuilds: NextPage = () => {
       .charAt(0)}`,
   });
 
+  console.log(
+    `${raceName?.toLowerCase().charAt(0)}v${opponentRace
+      ?.toLowerCase()
+      .charAt(0)}`
+  );
+
   const filteredBuilds = builds.data
     ?.filter((build) =>
       selectedBuildType === "all"
