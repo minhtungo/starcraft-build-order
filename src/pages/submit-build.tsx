@@ -4,6 +4,7 @@ import Head from "next/head";
 import { api } from "../utils/api";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { buildTypes } from "./races/[raceName]/match-ups/[opponentRace]";
 
 const SubmitBuildPage: NextPage = () => {
   const createBuildMutation = api.builds.createBuild.useMutation();
@@ -26,7 +27,7 @@ const SubmitBuildPage: NextPage = () => {
         style,
         author,
         title,
-        description
+        description,
       });
     } catch (error) {
       console.log(error);
@@ -83,10 +84,11 @@ const SubmitBuildPage: NextPage = () => {
                 id="match-up-select"
                 required
               >
-                <option value="cheese">Cheese</option>
-                <option value="all-in">All-In</option>
-                <option value="macro">Macro</option>
-                <option value="co-op">Co-op</option>
+                {buildTypes.map((buildType) => (
+                  <option key={buildType} value="cheese">
+                    {buildType}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
