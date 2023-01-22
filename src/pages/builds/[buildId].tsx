@@ -4,9 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import { api } from "@/utils/api";
-
-
-
+import { useEffect } from "react";
 
 const BuildPage: NextPage = () => {
   const { buildId } = useRouter().query as {
@@ -15,6 +13,13 @@ const BuildPage: NextPage = () => {
   const build = api.builds.getBuildsById.useQuery({
     buildId,
   });
+
+  const { mutate } = api.builds.incrementBuildOrderView.useMutation();
+
+  useEffect(() => {
+    mutate({ buildId });
+  }, [mutate, buildId]);
+
 
   return (
     <>
@@ -25,6 +30,7 @@ const BuildPage: NextPage = () => {
       </Head>
       <main className="container m-auto flex flex-col gap-4 bg-gray-800 px-12 pt-12">
         <h1 className="text-2xl text-white">{build?.data?.title}</h1>
+        <span>Viewed {build.data?.views}</span>
         <p className="bg-gray-500 p-4">{build.data?.buildOrder}</p>
       </main>
     </>

@@ -45,4 +45,20 @@ export const buildsRouter = createTRPCRouter({
         },
       });
     }),
+  incrementBuildOrderView: publicProcedure
+    .input(z.object({ buildId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const build = await ctx.prisma.buildOrder.update({
+        where: {
+          id: input.buildId,
+        },
+        data: {
+          views: { 
+            increment: 1 
+          },
+        },
+      });
+
+      return build;
+    }),
 });

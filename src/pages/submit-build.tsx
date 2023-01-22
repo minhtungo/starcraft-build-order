@@ -13,11 +13,29 @@ type TStep = {
 
 type races = "z" | "p" | "t";
 
+type TBuildStep = {
+  supply: number;
+  unit: string;
+  note: string;
+};
+
 const units: Record<races, TStep[]> = {
   z: [
     {
       name: "drone",
       supply: 1,
+    },
+    {
+      name: "roach",
+      supply: 1,
+    },
+    {
+      name: "overlord",
+      supply: 0,
+    },
+    {
+      name: "queen",
+      supply: 3,
     },
   ],
   p: [],
@@ -28,6 +46,18 @@ const structures: Record<races, TStep[]> = {
   z: [
     {
       name: "spawing pool",
+      supply: -1,
+    },
+    {
+      name: "hatchery",
+      supply: -1,
+    },
+    {
+      name: "lair",
+      supply: -1,
+    },
+    {
+      name: "spire",
       supply: -1,
     },
   ],
@@ -44,7 +74,9 @@ const SubmitBuildPage: NextPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [matchUp, setMatchUp] = useState("zvt");
-  const [supply, setSupply] = useState(12)
+  const [supply, setSupply] = useState(12);
+
+  const [buildSteps, setBuildSteps] = useState<TBuildStep[]>([]);
 
   const router = useRouter();
 
@@ -59,15 +91,16 @@ const SubmitBuildPage: NextPage = () => {
         title,
         description,
       });
+      router.push("/");
     } catch (error) {
       console.log(error);
-    }s
-    router.push("/");
+    }
   };
 
   const addStepToBuildOrder = (stepName: TStep) => {
+    setBuildSteps([...buildSteps, { supply, unit: stepName.name, note: "" }]);
     setBuildOrder(`${buildOrder}\n${supply} ${stepName.name}`);
-    setSupply(supply + stepName.supply)
+    setSupply(supply + stepName.supply);
   };
 
   const race = matchUp.split("v")[0];
@@ -173,27 +206,68 @@ const SubmitBuildPage: NextPage = () => {
               Description
             </label>
             <textarea
-              className="input h-[6rem]"
+              className="input h-[8rem]"
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
           <div className="flex w-full gap-4">
-            <div>
+            <div className="w-2/3">
               <label
                 className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 htmlFor="build"
               >
                 Build Order
               </label>
-              <textarea
-                className="input h-[6rem]"
+
+              {/* <textarea
+                className="input h-[8rem]"
                 id="build"
                 value={buildOrder}
                 onChange={(e) => setBuildOrder(e.target.value)}
-              />
+              /> */}
+              <table className="w-full text-left text-sm text-gray-400">
+                <thead className="bg-gray-700 p-2  text-xs uppercase text-gray-400">
+                  <tr>
+                    <th className="p-2">Supply</th>
+                    <th className="p-2">Unit/Structure</th>
+                    <th className="p-2">Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {buildSteps.map((buildStep, idx) => (
+                    <tr
+                      key={idx}
+                      className="border-b border-gray-700 bg-gray-800"
+                    >
+                      <td className="px-6 py-3">{buildStep.supply}</td>
+                      <td className="px-6 py-3">{buildStep.unit}</td>
+                      <td className="px-6 py-3">
+                        <input
+                          className="input border-0 bg-transparent hover:bg-gray-900 focus:bg-gray-800"
+                          value={buildStep.note}
+                          onChange={(e) => {
+                            const newBuildSteps = {
+                              ...buildStep,
+                              note: e.target.value,
+                            };
+                            setBuildSteps(
+                              buildSteps.map((originalBuildStep) =>
+                                buildStep === originalBuildStep
+                                  ? newBuildSteps
+                                  : originalBuildStep
+                              )
+                            );
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+
             <div className="flex gap-4">
               <div className="flex flex-col gap-4">
                 <h2 className="text-lg">Units</h2>

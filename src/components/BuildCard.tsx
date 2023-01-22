@@ -4,7 +4,7 @@ import React from "react";
 import Badge from "./Badge";
 
 const BuildCard = ({ build }: { build: BuildOrder }) => {
-  const badgeVariant =  {
+  const badgeVariant = {
     cheese: "yellow",
     macro: "green",
     "all-in": "red",
@@ -13,13 +13,14 @@ const BuildCard = ({ build }: { build: BuildOrder }) => {
 
   return (
     <div className="max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-800">
-      <a href="#">
+      <div className="flex justify-between">
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           {build.title}
         </h5>
-      </a>
+        <span className="text-xs">{build.views}</span>
+      </div>
       <p className="mb-3 flex gap-4 font-normal text-gray-700 dark:text-gray-400">
-        {build.description?.substring(0, 50) + "..."}
+        {`${(build.description as string)?.substring(0, 50)}...`}
       </p>
       <p className="mb-3 flex gap-4 font-normal text-gray-700 dark:text-gray-400">
         Style

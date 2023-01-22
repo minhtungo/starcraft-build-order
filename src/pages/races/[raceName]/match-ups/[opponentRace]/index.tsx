@@ -6,15 +6,20 @@ import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 import BuildCard from "@/components/BuildCard";
 import Radio from "@/components/Radio";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Label from "@/components/Label";
 import Input from "@/components/Input";
 import Form from "@/components/Form";
+import { BuildOrder } from "@prisma/client";
 
 export const buildTypes = ["Macro", "Co-op", "Cheese", "All-in"];
 
+const ALL_BUILD_TYPE = "all";
+
+type BuildOrderFields = Pick<BuildOrder, "description" | "title" | "author">;
+
 const FindBuilds: NextPage = () => {
-  const [selectedBuildType, setSelectedBuildType] = useState("all");
+  const [selectedBuildType, setSelectedBuildType] = useState(ALL_BUILD_TYPE);
   const [search, setSearch] = useState("");
   const { raceName, opponentRace } = useRouter().query as {
     opponentRace: string;
@@ -26,22 +31,18 @@ const FindBuilds: NextPage = () => {
       .charAt(0)}`,
   });
 
-  console.log(
-    `${raceName?.toLowerCase().charAt(0)}v${opponentRace
-      ?.toLowerCase()
-      .charAt(0)}`
-  );
-
   const filteredBuilds = builds.data
     ?.filter((build) =>
-      selectedBuildType === "all"
+      selectedBuildType === ALL_BUILD_TYPE
         ? true
         : build.style.toLowerCase() === selectedBuildType.toLowerCase()
     )
     .filter((build) =>
       search.toLowerCase() !== ""
         ? ["author", "title", "description"].some((key) =>
-            build[key]?.toLowerCase().includes(search.toLowerCase())
+            build[key as keyof BuildOrderFields]
+              ?.toLowerCase()
+              .includes(search.toLowerCase())
           )
         : true
     );
@@ -78,7 +79,7 @@ const FindBuilds: NextPage = () => {
                 Build Type
               </label>
               <ul className="w-full rounded-lg border border-gray-200 bg-white text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                {["all", ...buildTypes].map((buildType: string) => (
+                {[ALL_BUILD_TYPE, ...buildTypes].map((buildType: string) => (
                   <li
                     key={buildType}
                     className="w-full rounded-t-lg border-b border-gray-200 dark:border-gray-600"
